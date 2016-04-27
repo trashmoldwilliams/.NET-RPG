@@ -1,0 +1,10 @@
+﻿@using System.Security.Claims
+
+@model TimeAdventure.Models.Level
+@*@model IEnumerable<TimeAdventure.Models.Level>*@
+
+
+<h3>@Html.DisplayFor(x=> x.LevelDescription)</h3>
+
+@Html.ActionLink("Begin Fight", "Fight")
+

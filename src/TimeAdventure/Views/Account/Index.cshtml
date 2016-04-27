@@ -1,0 +1,26 @@
+﻿<html>
+<head>
+    <title>Time Adventure</title>
+</head>
+<body>
+    @using System.Security.Claims
+
+    <h2>Authentication with Identity</h2>
+    <hr />
+    @if (User.IsSignedIn())
+    {
+        <p>Hello @User.GetUserName()!</p>
+        @using (Html.BeginForm("LogOff", "Account"))
+        {
+            <hr />
+            @Html.ActionLink("Go to the questions list", "Index", "Questions")
+            <input type="submit" class="btn btn-default" value="Log out" />
+        }
+    }
+    else
+    {
+        <p>@Html.ActionLink("Register", "Register")</p>
+        <p>@Html.ActionLink("Log in", "Login")</p>
+    }
+</body>
+</html>
