@@ -1,4 +1,7 @@
 ﻿$(document).ready(function () {
+    var level = $("#level").html();
+    $("#fighterRight").append("<img src='/images/" + level + ".jpg' id='player2Image'>");
+
     //define as user
     var player1 = $("#player1").val();
 

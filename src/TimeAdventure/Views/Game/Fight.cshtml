@@ -14,7 +14,7 @@
 </head>
 <body>
 
-        @Html.Display("LevelId");
+        <span id="level">@Html.Display("LevelId")</span>
         <span id="name"> @Html.DisplayFor(x => x.Name)</span>
         <span id="health"> @Html.DisplayFor(x => x.Health)</span>
         <span id="attack"> @Html.DisplayFor(x => x.Attack)</span>
@@ -22,6 +22,7 @@
         <span id="EnemyName"> @Html.Display("EnemyName")</span>
         <span id="EnemyHealth"> @Html.Display("EnemyHealth")</span>
         <span id="EnemyAttack"> @Html.Display("EnemyAttack")</span>
+        <span id="testing"></span>
 
 
 
@@ -31,7 +32,7 @@
             <div class="col-xs-1"></div>
             <div class="col-xs-3">
                 <h1 id="player1Name" class="fighterHeader"></h1>
-                <div id="fighterLeft" class="fighterHeadshot"><img src="" id="player1Image"></div>
+                <div id="fighterLeft" class="fighterHeadshot"><img src="~/images/Harold.jpg" id="player1Image"></div>
                 <div class="fighterStats">
                     <div class="row">
                         <div class="col-xs-10">
@@ -68,7 +69,7 @@
             <!-- start player 2 -->
             <div class="col-xs-3">
                 <h1 id="player2Name" class="fighterHeader"></h1>
-                <div id="fighterLeft" class="fighterHeadshot"><img src="" id="player2Image"></div>
+                <div id="fighterRight" class="fighterHeadshot"></div>
                 <div class="fighterStats">
                     <div class="row">
                         <div class="col-xs-10">
