@@ -17,6 +17,5 @@ namespace TimeAdventure.Models
         public int Attack { get; set; }
         public int LevelId { get; set; }
         public virtual Level Level { get; set; }
-        public virtual ApplicationUser User { get; set; }
     }
 }

@@ -6,45 +6,64 @@
     var player2 = $("#player2").val();
 
         
-    var posting = $.post("/GetFighters", { player1: player1, player2: player2 });
-    posting.done(function (data) {
-        var player1 = $(data).find("#player1");
-        var player2 = $(data).find("#player2");
+    //var posting = $.post("/GetFighters", { player1: player1, player2: player2 });
+    //posting.done(function (data) {
+    //    var player1 = $(data).find("#player1");
+    //    var player2 = $(data).find("#player2");
 
-        player1 = new Fighter(player1.attr("name"), parseInt(player1.attr("healthpoints")), parseInt(player1.attr("attack")));
-        player2 = new Fighter(player2.attr("name"), parseInt(player2.attr("healthpoints")), parseInt(player2.attr("attack")));
+    var player1Name = $("#name").html();
+    console.log(player1Name);
+    var player1Hp = $("#health").text();
+    var player1Strength = $("#attack").text();
 
-        //draw player status
+    var player2Name = $("#EnemyName").html();
+    console.log(player1Name);
+    var player2Hp = $("#EnemyHealth").text();
+    var player2Strength = $("#EnemyAttack").text();
+
+
+    player1 = new Fighter(player1Name, parseInt(player1Hp), parseInt(player1Strength), 1);
+    player2 = new Fighter(player2Name, parseInt(player2Hp), parseInt(player2Strength), 2);
+
+    //draw player status
+    player1.draw();
+    player2.draw();
+
+    battle = new Battle(player1, player2);
+    $("#jab").click(function () {
+        battle.AddMoves(jab, battle.AI());
+        battle.ExecuteMove(battle.isFirst, battle.isSecond);
+        battle.ExecuteMove(battle.isSecond, battle.isFirst);
         player1.draw();
         player2.draw();
+        battle.checkDead();
+    });
 
-        battle = new Battle(player1, player2);
-        $("#jab").click(function () {
-            battle.AddMoves(jab, battle.AI());
-            battle.ExecuteMove(battle.isFirst, battle.isSecond);
-            battle.ExecuteMove(battle.isSecond, battle.isFirst);
-            player1.draw();
-            player2.draw();
-            battle.checkDead();
-        });
+    $("#hook").click(function () {
+        battle.AddMoves(hook, battle.AI());
+        battle.ExecuteMove(battle.isFirst, battle.isSecond);
+        battle.ExecuteMove(battle.isSecond, battle.isFirst);
+        player1.draw();
+        player2.draw()
+        battle.checkDead();
+    });
 
-        $("#hook").click(function () {
-            battle.AddMoves(hook, battle.AI());
-            battle.ExecuteMove(battle.isFirst, battle.isSecond);
-            battle.ExecuteMove(battle.isSecond, battle.isFirst);
-            player1.draw();
-            player2.draw()
-            battle.checkDead();
-        });
+    $("#uppercut").click(function () {
+        battle.AddMoves(uppercut, battle.AI());
+        battle.ExecuteMove(battle.isFirst, battle.isSecond);
+        battle.ExecuteMove(battle.isSecond, battle.isFirst);
+        player1.draw();
+        player2.draw()
+        battle.checkDead();
+    });
 
-        $("#uppercut").click(function () {
-            battle.AddMoves(uppercut, battle.AI());
-            battle.ExecuteMove(battle.isFirst, battle.isSecond);
-            battle.ExecuteMove(battle.isSecond, battle.isFirst);
-            player1.draw();
-            player2.draw()
-            battle.checkDead();
-        });
+    $("#bigOBlast").click(function () {
+        battle.AddMoves(bigOBlast, battle.AI());
+        battle.ExecuteMove(battle.isFirst, battle.isSecond);
+        battle.ExecuteMove(battle.isSecond, battle.isFirst);
+        player1.draw();
+        player2.draw()
+        battle.checkDead();
     });
 });
 
@@ -52,19 +71,22 @@ var player1 = null;
 var player2 = null;
 var battle = null;
 
-var Fighter = function (name, hp, attack) {
+var Fighter = function (name, hp, attack, player) {
     this.name = name.toUpperCase();
     this.hp = (20 * hp) + 120;
     this.maxHp = this.hp;
     this.attack = (23 + (2 * attack));
+    this.player = player;
 }
 
 Fighter.prototype.draw = function () {
     if (this.player === 1) {
+        $("#player1Name").html(this.name);
         $("#player1HpCurrent").html(this.hp);
         $("#player1HpMax").html(this.maxHp);
         $("#player1Attack").html(this.attack);
     } else {
+        $("#player2Name").html(this.name);
         $("#player2HpCurrent").html(this.hp);
         $("#player2HpMax").html(this.maxHp);
         $("#player2Attack").html(this.attack);
@@ -93,12 +115,14 @@ var Punch = function (name, multiplier, accuracy) {
 }
 
 var jabPunch = new Punch("JAB", 0.5, 100);
-var hookPunch = new Punch("HOOK", 1, 50);
-var uppercutPunch = new Punch("UPPERCUT", 1.5, 20);
+var hookPunch = new Punch("HOOK", 1, 75);
+var uppercutPunch = new Punch("UPPERCUT", 2, 40);
+var bigOBlastPunch = new Punch("BIG-O-BLAST", 5, 10);
 
 var jab = new Move(1, "executePunch", jabPunch);
 var hook = new Move(2, "executePunch", hookPunch);
 var uppercut = new Move(3, "executePunch", uppercutPunch);
+var bigOBlast = new Move(4, "executePunch", bigOBlastPunch);
 
 
 Battle.prototype.AddMoves = function (LeftMove, RightMove) {
@@ -186,9 +210,14 @@ Battle.prototype.AI = function () {
 }
 
 Battle.prototype.checkDead = function () {
-    if (this.leftFighter.hp <= 0) {
-        //player wins (progress)
+    if (this.leftFighter.hp <= 0 || ((this.leftFighter.hp <= 0) && (this.rightFighter.hp <= 0))) {
+        $("#gameOver").show();
+        $(".moveSelector").hide();
+
+        $("#gameLogList").text("");
+        $("#gameLogList").append("<li>It looks like " + this.leftFighter.name + " has been beaten to a pulp, good luck getting home now!</li>");
     } else if (this.rightFighter.hp <= 0) {
-        //enemy wins (return to index)
+        $("#progress").show();
+        $(".moveSelector").hide();
     }
 };

@@ -35,26 +35,30 @@ namespace TimeAdventure.Controllers
             return View();
         }
 
-        public IActionResult LoadLevel(int levelid, int playerId)
+        public IActionResult LoadLevel(int levelid)
         {
             var thisLevel = _db.Levels.FirstOrDefault(x => x.LevelId == levelid);
-            var levelPlayer = new LevelPlayer();
-            levelPlayer.LevelId = levelid;
-            levelPlayer.PlayerId = playerId;
-
-            _db.LevelPlayers.Add(levelPlayer);
-            _db.SaveChanges();
+           
             return View(thisLevel);
         }
         public IActionResult Fight(int id)
         {
             Level level = _db.Levels.FirstOrDefault(m => m.LevelId == id);
+            Enemy enemy = _db.Enemies.FirstOrDefault(x => x.LevelId == id);
             level.Players = _db.Players.Join(_db.LevelPlayers.Where(m => m.LevelId == id).ToList(),
                 m => m.PlayerId,
                 m => m.PlayerId,
                 (o, i) => o).ToList();
+            var firstPlayer = _db.Players.FirstOrDefault(p => p.PlayerId == 1);
+            ViewData["LevelId"] = level.LevelId;
+            ViewData["NextLevelId"] = level.LevelId + 1;
+            ViewData["EnemyId"] = enemy.EnemyId;
+            ViewData["EnemyName"] = enemy.EnemyDescription;
+            ViewData["EnemyHealth"] = enemy.Health;
+            ViewData["EnemyAttack"] = enemy.Attack;
+
             //var questionList = _db.Questions.ToList();
-            return View(level);
+            return View(firstPlayer);
         }
 
         public IActionResult Create()
